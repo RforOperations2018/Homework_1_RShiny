@@ -21,10 +21,10 @@ ui <- fluidPage(
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
       sidebarPanel(
-          selectInput(inputId = "y",
-                      label = "Do you think the Titanic sunk?",
-                     choices = c("Yes", "No", "It did in the movie, but I'm really not sure"),
-                     selected = "Yes"
+          checkboxGroupInput(inputId = "x",
+                      label = "Which class of passenger on the Titanic was the largest?",
+                     choices = c("1st", "2nd", "3rd", "Crew"),
+                     selected = "1st"
                      ),
           sliderInput(inputId = "hours",
                       label = "How many hours did the Titanic take to sink?",
@@ -32,7 +32,7 @@ ui <- fluidPage(
                       min = 0,
                       max = 10,
                       step = 0.25),
-          checkboxGroupInput(inputId = "reasons",
+          radioButtons(inputId = "reasons",
                              label = "Why did the Titanic sink?",
                              choices = c("The captain wasn't paying attention",
                                          "Rose was distracting the captain",
@@ -45,19 +45,21 @@ ui <- fluidPage(
       
       # Show a plot of the generated distribution
       mainPanel(
-        plotOutput(outputId = "titanic"),
-        plotOutput(outputId = "titanic2")
+        plotOutput(outputId = "titanic", width = "75%"),
+        plotOutput(outputId = "titanic2", width = "75%")
       )
    )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-     output$titanic <- renderPlot({ggplot(data = Titanic, aes(x = Class, y = Freq, fill = Sex)) + 
+     output$titanic <- renderPlot({ggplot(data = Titanic, aes(x = Class, y = Freq, fill = Class)) + 
          geom_bar(stat="identity", position=position_dodge()) + 
-         ggtitle("Titanic Classes and Age, Broken Down by Sex")})
-     output$titanic2 <- renderPlot({ggplot(data = Titanic, aes(x = Age, y = Freq, fill = Sex)) + 
-         geom_bar(stat="identity", position=position_dodge())})
+         ggtitle("Titanic Classes and Age, Broken Down by Sex") +
+         ylab("Total Passenger Count")})
+     output$titanic2 <- renderPlot({ggplot(data = Titanic, aes(x = Age, y = Freq, fill = Age)) + 
+         geom_bar(stat="identity", position=position_dodge()) +
+                    ylab("Total Passenger Count")})
    }
 
 

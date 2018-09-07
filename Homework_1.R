@@ -27,7 +27,7 @@ ui <- fluidPage(
                      selected = "1st"
                      ),
           sliderInput(inputId = "hours",
-                      label = "How many hours did the Titanic take to sink?",
+                      label = "Give a range that captures how many hours the Titanic took to sink",
                       value = c(2,5),
                       min = 0,
                       max = 10,
@@ -55,7 +55,8 @@ ui <- fluidPage(
 server <- function(input, output) {
      output$titanic <- renderPlot({ggplot(data = Titanic, aes(x = Class, y = Freq, fill = Class)) + 
          geom_bar(stat="identity", position=position_dodge()) + 
-         ggtitle("Titanic Classes and Age, Broken Down by Sex") +
+         ggtitle("Titanic Classes and Age, Broken Down by Sex")+
+         scale_fill_manual(values= c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")) +
          ylab("Total Passenger Count")})
      output$titanic2 <- renderPlot({ggplot(data = Titanic, aes(x = Age, y = Freq, fill = Age)) + 
          geom_bar(stat="identity", position=position_dodge()) +
